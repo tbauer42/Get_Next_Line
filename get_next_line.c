@@ -6,14 +6,14 @@
 /*   By: tbauer <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 17:18:49 by tbauer            #+#    #+#             */
-/*   Updated: 2017/12/06 18:39:39 by tbauer           ###   ########.fr       */
+/*   Updated: 2018/01/08 15:53:52 by tbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include "libft.h"
 
-int	ft_error(char **str,char **line, int fd)
+int		ft_error(char **str, char **line, int fd)
 {
 	if (fd == -1 || line == NULL)
 		return (-1);
@@ -38,7 +38,7 @@ char	*read_it(char *str, int fd)
 	return (str);
 }
 
-int	get_next_line(const int fd, char **line)
+int		get_next_line(const int fd, char **line)
 {
 	static char	*str;
 	int			i;
