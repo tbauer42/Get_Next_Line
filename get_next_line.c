@@ -6,7 +6,7 @@
 /*   By: tbauer <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 17:18:49 by tbauer            #+#    #+#             */
-/*   Updated: 2018/01/08 15:53:52 by tbauer           ###   ########.fr       */
+/*   Updated: 2018/01/10 17:51:39 by tbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 int		ft_error(char **str, char **line, int fd)
 {
+	if (BUFF_SIZE <= 0)
+		return (-1);
 	if (fd == -1 || line == NULL)
 		return (-1);
 	if (!*str)
@@ -28,26 +30,42 @@ int		ft_error(char **str, char **line, int fd)
 char	*read_it(char *str, int fd)
 {
 	char	buf[BUFF_SIZE + 1];
+	char	*dr_freeman;
 	int		ret;
 
 	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
 	{
 		buf[ret] = '\0';
+		dr_freeman = str;
 		str = ft_strjoin(str, buf);
+		free(dr_freeman);
 	}
+	if (ret < 0)
+		return (NULL);
 	return (str);
+}
+
+void	get_norm(char **line, char **str, char **str_free, int i)
+{
+	(*line) = ft_strsub(*str, 0, i);
+	*str_free = ft_strdup(*str + i + 1);
+	free(*str);
+	*str = ft_strdup(*str_free);
+	free(*str_free);
 }
 
 int		get_next_line(const int fd, char **line)
 {
 	static char	*str;
 	int			i;
+	char		*str_free;
 
 	if (ft_error(&str, line, fd) == -1)
 		return (-1);
 	if (*str)
 		ft_strcpy(*line, str);
-	str = read_it(str, fd);
+	if ((str = read_it(str, fd)) == NULL)
+		return (-1);
 	i = 0;
 	if (str[i])
 	{
@@ -56,10 +74,7 @@ int		get_next_line(const int fd, char **line)
 		if (i == 0)
 			(*line = ft_strdup(""));
 		else
-		{
-			(*line) = ft_strsub(str, 0, i);
-			str = &str[i + 1];
-		}
+			get_norm(line, &str, &str_free, i);
 		return (1);
 	}
 	else

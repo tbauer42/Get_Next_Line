@@ -9,8 +9,7 @@ int main(int argc, char **argv)
 	char *line;
 
 	fd = open(argv[1], O_RDONLY);
-	printf("%d\n", fd);
-	while(get_next_line(fd, &line))
+	while (get_next_line(fd, &line )>0)
 		printf("%s", line);
 	return 0;
 }
