@@ -6,18 +6,16 @@
 /*   By: tbauer <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 17:18:49 by tbauer            #+#    #+#             */
-/*   Updated: 2018/04/16 15:05:30 by tbauer           ###   ########.fr       */
+/*   Updated: 2018/04/16 14:41:33 by tbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include "libft.h"
+#include "libft/includes/libft.h"
 
 int		ft_error(char **str, char **line, int fd)
 {
-	if (BUFF_SIZE <= 0)
-		return (-1);
-	if (fd == -1 || line == NULL)
+	if (fd == -1 || line == NULL || BUFF_SIZE <= 0)
 		return (-1);
 	if (!*str)
 	{
@@ -71,10 +69,7 @@ int		get_next_line(const int fd, char **line)
 	{
 		while (str[i] != '\n' && str[i])
 			i++;
-		if (i == 0)
-			(*line = ft_strdup(""));
-		else
-			get_norm(line, &str, &str_free, i);
+		get_norm(line, &str, &str_free, i);
 		return (1);
 	}
 	else
