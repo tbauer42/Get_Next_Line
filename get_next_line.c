@@ -6,7 +6,7 @@
 /*   By: tbauer <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 17:18:49 by tbauer            #+#    #+#             */
-/*   Updated: 2018/04/16 14:41:33 by tbauer           ###   ########.fr       */
+/*   Updated: 2018/04/16 19:40:20 by tbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,25 @@ char	*read_it(char *str, int fd)
 	char	*dr_freeman;
 	int		ret;
 
-	while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+	if (fd == 0)
 	{
-		buf[ret] = '\0';
-		dr_freeman = str;
-		str = ft_strjoin(str, buf);
-		free(dr_freeman);
+		if ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+		{
+			buf[ret] = '\0';
+			dr_freeman = str;
+			str = ft_strjoin(str, buf);
+			free(dr_freeman);
+		}
+	}
+	else
+	{
+		while ((ret = read(fd, buf, BUFF_SIZE)) > 0)
+		{
+			buf[ret] = '\0';
+			dr_freeman = str;
+			str = ft_strjoin(str, buf);
+			free(dr_freeman);
+		}
 	}
 	if (ret < 0)
 		return (NULL);
@@ -60,7 +73,7 @@ int		get_next_line(const int fd, char **line)
 
 	if (ft_error(&str, line, fd) == -1)
 		return (-1);
-	if (*str)
+	if (*str && *line)
 		ft_strcpy(*line, str);
 	if ((str = read_it(str, fd)) == NULL)
 		return (-1);
