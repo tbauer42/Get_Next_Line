@@ -6,7 +6,7 @@
 /*   By: tbauer <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 17:18:49 by tbauer            #+#    #+#             */
-/*   Updated: 2018/04/16 19:40:20 by tbauer           ###   ########.fr       */
+/*   Updated: 2018/05/17 16:03:51 by tbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,12 @@ int		get_next_line(const int fd, char **line)
 
 	if (ft_error(&str, line, fd) == -1)
 		return (-1);
-	if (*str && *line)
-		ft_strcpy(*line, str);
 	if ((str = read_it(str, fd)) == NULL)
 		return (-1);
 	i = 0;
 	if (str[i])
 	{
-		while (str[i] != '\n' && str[i])
+		while (str[i] && str[i] != '\n')
 			i++;
 		get_norm(line, &str, &str_free, i);
 		return (1);
