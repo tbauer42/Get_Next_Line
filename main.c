@@ -12,7 +12,6 @@ int     main(int ac, char **av)
 			printf("%s\n", line);
 			free(line);
 		}
-		while (1);
 	}
 	else
 	{
