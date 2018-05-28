@@ -6,7 +6,7 @@
 /*   By: tbauer <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 17:18:49 by tbauer            #+#    #+#             */
-/*   Updated: 2018/05/28 15:16:57 by tbauer           ###   ########.fr       */
+/*   Updated: 2018/05/28 16:46:38 by tbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,9 @@ int		ft_error(char **str, char **line, int fd)
 	return (0);
 }
 
-char	*read_it(char *str, int fd)
+char	*read_it(char *str, int fd, char *dr_freeman, int ret)
 {
 	char	buf[BUFF_SIZE + 1];
-	char	*dr_freeman;
-	int		ret;
 
 	if (fd == 0)
 	{
@@ -70,10 +68,11 @@ int		get_next_line(const int fd, char **line)
 	static char	*str;
 	int			i;
 	char		*str_free;
+	t_var		pt;
 
 	if (ft_error(&str, line, fd) == -1)
 		return (-1);
-	if ((str = read_it(str, fd)) == NULL)
+	if ((str = read_it(str, fd, pt.dr_freeman, pt.ret)) == NULL)
 		return (-1);
 	i = 0;
 	if (str[i])

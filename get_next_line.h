@@ -6,7 +6,7 @@
 /*   By: tbauer <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/12/06 17:19:05 by tbauer            #+#    #+#             */
-/*   Updated: 2018/05/28 15:11:51 by tbauer           ###   ########.fr       */
+/*   Updated: 2018/05/28 16:48:25 by tbauer           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,14 @@
 # include <unistd.h>
 # include <stdlib.h>
 
-# define BUFF_SIZE 16
+# define BUFF_SIZE 12000
 
-int	get_next_line(const int fd, char **line);
+typedef struct	s_var
+{
+	char*	dr_freeman;
+	int		ret;
+}				t_var;
+
+int				get_next_line(const int fd, char **line);
 
 #endif
