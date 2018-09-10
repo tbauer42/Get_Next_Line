@@ -1,24 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   ft_strjoin_free.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: gperilla <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/20 10:21:11 by gperilla          #+#    #+#             */
-/*   Updated: 2017/12/08 14:36:47 by gperilla         ###   ########.fr       */
+/*   Created: 2017/11/21 22:33:59 by gperilla          #+#    #+#             */
+/*   Updated: 2017/12/08 15:36:19 by gperilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
+#include <stdlib.h>
 
-# include <unistd.h>
-# include <stdlib.h>
-# include "libft/includes/libft.h"
+char	*ft_strjoin_free(char *s1, char *s2, size_t n)
+{
+	int		i;
+	char	*tab;
 
-# define BUFF_SIZE 255
-
-int		get_next_line(const int fd, char **line);
-
-#endif
+	if (!s1 || !s2)
+		return (NULL);
+	i = 0;
+	if (!(tab = ft_strjoin((const char*)s1, (const char*)s2)))
+		return (NULL);
+	if (n == 1)
+		free(s1);
+	if (n == 2)
+		free(s2);
+	if (n == 3)
+	{
+		free(s2);
+		free(s1);
+	}
+	return (tab);
+}
