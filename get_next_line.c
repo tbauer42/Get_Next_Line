@@ -1,17 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: gperilla <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/20 10:19:22 by gperilla          #+#    #+#             */
-/*   Updated: 2017/11/30 14:51:29 by gperilla         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include <stdio.h>
-
 #include "get_next_line.h"
 #include "libft/includes/libft.h"
 
@@ -80,7 +66,7 @@ int			get_next_line(const int fd, char **line)
 			return (-1);
 	if ((i = check_endline(str, ft_strlen(str))) >= 0)
 		return (check_str(str, i, line));
-	if (!(buff = malloc(sizeof(char) * BUFF_SIZE + 1)))
+	if (!(buff = malloc(sizeof(char) * (BUFF_SIZE + 1))))
 		return (-1);
 	ft_bzero(buff, BUFF_SIZE + 1);
 	if ((i = read_loop(fd, &str, buff, line)) > 0)
