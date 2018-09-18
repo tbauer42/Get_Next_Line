@@ -8,11 +8,21 @@ static int	check_endline(char *str, size_t size)
 	i = 0;
 	while (i < size)
 	{
-		if (str[i] == '\0' || str[i] == '\n')
+		if (str[i] == '\n')
 			return (i);
 		i++;
 	}
 	return (-1);
+}
+
+static char	*ft_joinfree(char *str, char *buff)
+{
+	char		*tmp;
+
+	tmp = str;
+	str = ft_strjoin(tmp, buff);
+	ft_strdel(&tmp);
+	return (str);
 }
 
 static int	check_str(char *str, int i, char **line)
@@ -34,7 +44,7 @@ static int	check_str(char *str, int i, char **line)
 
 static int	found_endl(char **str, char *buff, int i, char **line)
 {
-	if (!(*str = ft_strjoin_free(*str, buff, 1)))
+	if (!(*str = ft_joinfree(*str, buff)))
 		return (-1);
 	i = check_endline(*str, ft_strlen(*str));
 	return (check_str(*str, i, line));
@@ -48,7 +58,7 @@ static int	read_loop(int fd, char **str, char *buff, char **line)
 	{
 		buff[i] = '\0';
 		if ((i = check_endline(buff, i)) < 0)
-			*str = ft_strjoin_free(*str, buff, 1);
+			*str = ft_joinfree(*str, buff);
 		else
 			return (found_endl(str, buff, i, line));
 	}
@@ -62,7 +72,7 @@ int			get_next_line(const int fd, char **line)
 	char		buff[BUFF_SIZE + 1];
 
 	if (str == NULL)
-		if (!(str = (char*)malloc(sizeof(char) * (BUFF_SIZE + 1))))
+		if (!(str = ft_strnew(BUFF_SIZE + 1)))
 			return (-1);
 	if ((i = check_endline(str, ft_strlen(str))) >= 0)
 		return (check_str(str, i, line));
