@@ -1,5 +1,6 @@
 #include "get_next_line.h"
 #include "libft/includes/libft.h"
+#include <stdio.h>
 
 static int	check_endline(char *str, size_t size)
 {
@@ -59,22 +60,16 @@ int			get_next_line(const int fd, char **line)
 {
 	int			i;
 	static char	*str;
-	char		*buff;
+	char		buff[BUFF_SIZE + 1];;
 
 	if (str == NULL)
-		if (!(str = (char*)malloc(sizeof(char) * (BUFF_SIZE + 1))))
+		if (!(str = ft_strnew(BUFF_SIZE + 1)))
 			return (-1);
 	if ((i = check_endline(str, ft_strlen(str))) >= 0)
 		return (check_str(str, i, line));
-	if (!(buff = malloc(sizeof(char) * (BUFF_SIZE + 1))))
-		return (-1);
 	ft_bzero(buff, BUFF_SIZE + 1);
 	if ((i = read_loop(fd, &str, buff, line)) > 0)
-	{
-		free(buff);
 		return (i);
-	}
-	free(buff);
 	if (str[0] != '\0')
 		return (check_str(str, ft_strlen(str), line));
 	if (i == 0)
