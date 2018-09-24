@@ -1,76 +1,72 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vklaouse <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/12/15 18:59:49 by vklaouse          #+#    #+#             */
+/*   Updated: 2016/01/20 15:57:41 by vklaouse         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-#include "libft/includes/libft.h"
 
-static int	check_endline(char *str, size_t size)
+static int	ft_del(char **stk)
 {
-	size_t i;
-
-	i = 0;
-	while (i < size)
+	if (stk != NULL)
 	{
-		if (str[i] == '\0' || str[i] == '\n')
-			return (i);
-		i++;
+		free(*stk);
+		*stk = NULL;
 	}
-	return (-1);
+	return (0);
 }
 
-static int	check_str(char *str, int i, char **line)
+static char	*ft_join(char *stk, char *buf)
 {
-	int j;
+	char		*tmp;
 
-	if (str[i] == '\0')
-		j = i;
-	else
-		j = i + 1;
-	str[i] = '\0';
-	if (!(*line = ft_strdup(str)))
+	tmp = stk;
+	stk = ft_strjoin(tmp, buf);
+	ft_strdel(&tmp);
+	return (stk);
+}
+
+static char	*ft_sub(char *stk)
+{
+	char		*tmp;
+
+	tmp = stk;
+	stk = ft_strsub(tmp, ft_strchr(tmp, '\n') - tmp + 1, \
+		ft_strlen(ft_strchr(tmp, '\n')));
+	ft_strdel(&tmp);
+	return (stk);
+}
+
+int			get_next_line(int const fd, char **line)
+{
+	static char	*stk[2147483647];
+	char		buf[BUFF_SIZE + 1];
+	int			ret;
+
+	ret = 1;
+	if (BUFF_SIZE < 1 || !line || fd < 0)
 		return (-1);
-	str = ft_strcpy(str, str + j);
-	if (i == j)
-		str[0] = '\0';
+	if (!stk[fd])
+		stk[fd] = ft_strnew(0);
+	while (!(ft_strchr(stk[fd], '\n')) && (ret = read(fd, buf, BUFF_SIZE)) > 0)
+	{
+		buf[ret] = '\0';
+		stk[fd] = ft_join(stk[fd], buf);
+	}
+	if (ret < 0)
+		return (-1);
+	*line = ft_strchr(stk[fd], '\n') ? ft_strsub(stk[fd], 0, \
+			ft_strchr(stk[fd], '\n') - stk[fd] + 1) : ft_strdup(stk[fd]);
+	if (ft_strlen(*line) == 0)
+		return (ft_del(&stk[fd]));
+	if (ret)
+		line[0][ft_strlen(*line) - 1] = '\0';
+	stk[fd] = ft_sub(stk[fd]);
 	return (1);
-}
-
-static int	found_endl(char **str, char *buff, int i, char **line)
-{
-	if (!(*str = ft_strjoin_free(*str, buff, 1)))
-		return (-1);
-	i = check_endline(*str, ft_strlen(*str));
-	return (check_str(*str, i, line));
-}
-
-static int	read_loop(int fd, char **str, char *buff, char **line)
-{
-	int i;
-
-	while ((i = read(fd, buff, BUFF_SIZE)) > 0)
-	{
-		buff[i] = '\0';
-		if ((i = check_endline(buff, i)) < 0)
-			*str = ft_strjoin_free(*str, buff, 1);
-		else
-			return (found_endl(str, buff, i, line));
-	}
-	return (i);
-}
-
-int			get_next_line(const int fd, char **line)
-{
-	int			i;
-	static char	*str;
-	char		buff[BUFF_SIZE + 1];
-
-	if (str == NULL)
-		if (!(str = (char*)malloc(sizeof(char) * (BUFF_SIZE + 1))))
-			return (-1);
-	if ((i = check_endline(str, ft_strlen(str))) >= 0)
-		return (check_str(str, i, line));
-	if ((i = read_loop(fd, &str, buff, line)) > 0)
-		return (i);
-	if (str[0] != '\0')
-		return (check_str(str, ft_strlen(str), line));
-	if (i == 0)
-		return (0);
-	return (-1);
 }
